@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="ModuleA.Views.BookEditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ViewModels="clr-namespace:ModuleA.ViewModels"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <UserControl.DataContext>
+        <ViewModels:BookEditViewViewModel/>
+    </UserControl.DataContext>
+    <StackPanel>
+        <Label Content="Title"/>
+        <TextBox Text="{Binding EditTarget.Value.Title.Value, UpdateSourceTrigger=PropertyChanged}"
+                 TextWrapping="Wrap"
+                 Height="23"/>
+        <Label Content="Author"/>
+        <TextBox Text="{Binding EditTarget.Value.Author.Value.Name, UpdateSourceTrigger=PropertyChanged}"
+                 IsEnabled="False"
+                 IsReadOnly="True"
+                 TextWrapping="Wrap"
+                 Height="23"/>
+        <Label Content="Published Year"/>
+        <ComboBox ItemsSource="{Binding Years, Mode=OneWay}"
+                  SelectedIndex="{Binding YearsIndex.Value, Mode=OneWay}"
+                  SelectedItem="{Binding EditTarget.Value.PublishedYear.Value, UpdateSourceTrigger=PropertyChanged}"
+                  Height="23"/>
+        <Label Content="Publisher"/>
+        <TextBox Text="{Binding EditTarget.Value.Publisher.Value.Name, UpdateSourceTrigger=PropertyChanged}"
+                 IsEnabled="False"
+                 IsReadOnly="True"
+                 TextWrapping="Wrap"
+                 Height="23"/>
+        <Button Content="COMMIT" Command="{Binding CommitCommand, Mode=OneWay}"/>
+        <Button Content="CANCEL" Command="{Binding CancelCommand, Mode=OneWay}"/>
+    </StackPanel>
+</UserControl>

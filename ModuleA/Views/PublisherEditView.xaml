@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="ModuleA.Views.PublisherEditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ModuleA.ViewModels"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <UserControl.DataContext>
+        <vm:PublisherEditViewViewModel/>
+    </UserControl.DataContext>
+    <StackPanel>
+        <Label Content="Name"/>
+        <TextBox Text="{Binding EditTarget.Value.Name.Value, UpdateSourceTrigger=PropertyChanged}"
+                 TextWrapping="Wrap"
+                 Height="23"/>
+        <Label Content="Address"/>
+        <TextBox Text="{Binding EditTarget.Value.Address.Value, UpdateSourceTrigger=PropertyChanged}"
+                 TextWrapping="Wrap"
+                 Height="23"/>
+        <Button Content="COMMIT" Command="{Binding CommitCommand, Mode=OneWay}"/>
+        <Button Content="CANCEL" Command="{Binding CancelCommand, Mode=OneWay}"/>
+    </StackPanel>
+</UserControl>
