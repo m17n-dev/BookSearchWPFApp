@@ -10,15 +10,13 @@ using AppContext = ModuleA.Models.AppContext;
 
 namespace ModuleA.ViewModels {
     public class BookEditViewViewModel : IInteractionRequestAware {
-        private CompositeDisposable Disposable { get; } = new CompositeDisposable();
-
+        private CompositeDisposable _disposable { get; } = new CompositeDisposable();
         // Model 
         private readonly AppContext _model = AppContext.Instance;
-
         // IInteractionRequestAware 
         public Action FinishInteraction { get; set; }
         public INotification Notification { get; set; }
-
+        // ---
         public ReactiveProperty<BookViewModel> EditTarget { get; private set; }
         public ReadOnlyReactiveCollection<int> Years { get; private set; }
         public ReactiveProperty<int> YearsIndex { get; private set; }
@@ -31,7 +29,7 @@ namespace ModuleA.ViewModels {
                 .Where(x => x != null)
                 .Select(x => new BookViewModel(x))
                 .ToReactiveProperty()
-                .AddTo(this.Disposable);
+                .AddTo(this._disposable);
 
             this.Years = this._model
                 .BooksMaster.Years
@@ -41,8 +39,7 @@ namespace ModuleA.ViewModels {
                 .ObserveProperty(x => x.YearsIndex)
                 .Select(x => x)
                 .ToReactiveProperty()
-                .AddTo(this.Disposable);
-
+                .AddTo(this._disposable);
 
             this.CommitCommand = this.EditTarget
                 .Where(x => x != null)

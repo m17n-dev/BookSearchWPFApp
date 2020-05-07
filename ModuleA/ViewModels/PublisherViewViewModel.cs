@@ -11,7 +11,7 @@ using AppContext = ModuleA.Models.AppContext;
 
 namespace ModuleA.ViewModels {
     public class PublisherViewViewModel : BindableBase, INotifyPropertyChanged {
-        private CompositeDisposable Disposable { get; } = new CompositeDisposable();
+        private CompositeDisposable _disposable { get; } = new CompositeDisposable();
         private readonly AppContext _model = AppContext.Instance;
         public ReadOnlyReactiveCollection<PublisherViewModel> Publishers { get; private set; }
         public ReactiveProperty<PublisherViewModel> InputPublisher { get; private set; }
@@ -33,13 +33,13 @@ namespace ModuleA.ViewModels {
                 .PublishersMaster.ObserveProperty(x => x.InputPublisher)
                 .Select(x => new PublisherViewModel(x))
                 .ToReactiveProperty()
-                .AddTo(this.Disposable);
+                .AddTo(this._disposable);
 
             this.CountedPublisher = this._model
                 .PublishersMaster
                 .ObserveProperty(x => x.CountPublisher)
                 .ToReactiveProperty()
-                .AddTo(this.Disposable);
+                .AddTo(this._disposable);
 
             this.SelectedPublisher = new ReactiveProperty<PublisherViewModel>();
 

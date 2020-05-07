@@ -11,7 +11,7 @@ using AppContext = ModuleA.Models.AppContext;
 
 namespace ModuleA.ViewModels {
     public class BookViewViewModel : BindableBase, INotifyPropertyChanged {
-        private CompositeDisposable Disposable { get; } = new CompositeDisposable();
+        private CompositeDisposable _disposable { get; } = new CompositeDisposable();
         private readonly AppContext _model = AppContext.Instance;
         public ReadOnlyReactiveCollection<BookViewModel> Books { get; private set; }
         public ReadOnlyReactiveCollection<int> Years { get; private set; }
@@ -41,13 +41,13 @@ namespace ModuleA.ViewModels {
                 .BooksMaster.ObserveProperty(x => x.InputBook)
                 .Select(x => new BookViewModel(x))
                 .ToReactiveProperty()
-                .AddTo(this.Disposable);
+                .AddTo(this._disposable);
 
             this.CountedBook = this._model
                 .BooksMaster
                 .ObserveProperty(x => x.CountBook)
                 .ToReactiveProperty()
-                .AddTo(this.Disposable);
+                .AddTo(this._disposable);
 
             this.SelectedBook = new ReactiveProperty<BookViewModel>();
 

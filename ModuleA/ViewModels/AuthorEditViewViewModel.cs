@@ -11,15 +11,13 @@ using AppContext = ModuleA.Models.AppContext;
 
 namespace ModuleA.ViewModels {
     public class AuthorEditViewViewModel : IInteractionRequestAware {
-        private CompositeDisposable Disposable { get; } = new CompositeDisposable();
-
+        private CompositeDisposable _disposable { get; } = new CompositeDisposable();
         // Model 
         private readonly AppContext _model = AppContext.Instance;
-
         // IInteractionRequestAware 
         public Action FinishInteraction { get; set; }
         public INotification Notification { get; set; }
-
+        // ---
         public ReactiveProperty<AuthorViewModel> EditTarget { get; private set; }
         public ReactiveCommand CommitCommand { get; private set; }
         public DelegateCommand CancelCommand { get; private set; }
@@ -31,7 +29,7 @@ namespace ModuleA.ViewModels {
                 .Where(x => x != null)
                 .Select(x => new AuthorViewModel(x))
                 .ToReactiveProperty()
-                .AddTo(this.Disposable);
+                .AddTo(this._disposable);
 
             this.CommitCommand = this.EditTarget
                 .Where(x => x != null)

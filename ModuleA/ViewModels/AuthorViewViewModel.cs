@@ -13,7 +13,7 @@ using AppContext = ModuleA.Models.AppContext;
 
 namespace ModuleA.ViewModels {
     public class AuthorViewViewModel : BindableBase, INotifyPropertyChanged {
-        private CompositeDisposable Disposable { get; } = new CompositeDisposable();
+        private CompositeDisposable _disposable { get; } = new CompositeDisposable();
         private readonly AppContext _model = AppContext.Instance;
         public ReadOnlyReactiveCollection<AuthorViewModel> Authors { get; private set; }
         public ReactiveProperty<AuthorViewModel> InputAuthor { get; private set; }
@@ -36,13 +36,13 @@ namespace ModuleA.ViewModels {
                 .AuthorsMaster.ObserveProperty(x => x.InputAuthor)
                 .Select(x => new AuthorViewModel(x))
                 .ToReactiveProperty()
-                .AddTo(this.Disposable);
+                .AddTo(this._disposable);
 
             this.CountedAuthor = this._model
                 .AuthorsMaster
                 .ObserveProperty(x => x.CountAuthor)
                 .ToReactiveProperty()
-                .AddTo(this.Disposable);
+                .AddTo(this._disposable);
 
             //DatePicker Default Value
             this.InputAuthor.Value.Birthday.Value = DateTime.Now.ToString("yyyy/MM/dd");

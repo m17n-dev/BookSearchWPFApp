@@ -29,6 +29,24 @@
         </Custom:InteractionRequestTrigger>
     </i:Interaction.Triggers>
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="CheckBoxItemStyle" TargetType="{x:Type CheckBox}">
+                <Setter Property="Margin" Value="0,1"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="IsChecked" Value="{Binding IsChecked.Value, UpdateSourceTrigger=PropertyChanged}"/>
+            </Style>
+            <Style x:Key="DataGridCellStyle" TargetType="{x:Type DataGridCell}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsChecked.Value, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                        <Setter Property="Background" Value="Pink"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
     <Grid Margin="10,10,10,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -53,13 +71,6 @@
             <Label Content="Title："/>
             <TextBox Text="{Binding InputBook.Value.Title.Value, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" Height="23" Width="200"/>
             <Label Content="Author："/>
-            <!--<ComboBox ItemsSource="{Binding Authors}"
-                      SelectedItem="{Binding InputBook.Value.Author.Value, UpdateSourceTrigger=PropertyChanged}"
-                      DisplayMemberPath="Name"
-                      IsTextSearchEnabled="True"
-                      IsEditable="True"
-                      Height="23" Width="100">
-            </ComboBox>-->
             <ComboBox SelectedItem="{Binding InputBook.Value.Author.Value, UpdateSourceTrigger=PropertyChanged}"
                       DisplayMemberPath="NameAndId"
                       IsTextSearchEnabled="False"
@@ -102,8 +113,13 @@
                   SelectedItem="{Binding SelectedBook.Value, Mode=TwoWay}"
                   ScrollViewer.CanContentScroll="True"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
-                  ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                  CellStyle="{StaticResource DataGridCellStyle}">
             <DataGrid.Columns>
+                <DataGridCheckBoxColumn Header="Check"
+                                        ElementStyle="{StaticResource CheckBoxItemStyle}"
+                                        IsReadOnly="False"
+                                        ClipboardContentBinding="{x:Null}"/>
                 <DataGridTextColumn Header="Title"
                                     Binding="{Binding Title.Value}"
                                     ClipboardContentBinding="{x:Null}"/>

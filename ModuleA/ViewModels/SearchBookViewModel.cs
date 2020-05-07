@@ -7,7 +7,7 @@ using System.Reactive.Disposables;
 
 namespace ModuleA.ViewModels {
     public class SearchBookViewModel : BindableBase, INotifyPropertyChanged {
-        private CompositeDisposable Disposable { get; } = new CompositeDisposable();
+        private CompositeDisposable _disposable { get; } = new CompositeDisposable();
         private readonly AppContext _model = AppContext.Instance;
         public ReadOnlyReactiveCollection<BookViewModel> Books { get; private set; }
         public ReactiveProperty<string> SearchString { get; private set; }
@@ -16,7 +16,7 @@ namespace ModuleA.ViewModels {
 
         public SearchBookViewModel() {
             this.SearchString = new ReactiveProperty<string>("")
-                .AddTo(this.Disposable);
+                .AddTo(this._disposable);
 
             this.Books = this._model
                 .SearchBooksMaster.Books
@@ -26,7 +26,7 @@ namespace ModuleA.ViewModels {
                 .SearchBooksMaster
                 .ObserveProperty(x => x.CountBook)
                 .ToReactiveProperty()
-                .AddTo(this.Disposable);
+                .AddTo(this._disposable);
 
             this.SearchCommand = new AsyncReactiveCommand();
             this.SearchCommand

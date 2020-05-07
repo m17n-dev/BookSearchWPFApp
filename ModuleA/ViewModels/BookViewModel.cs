@@ -25,12 +25,11 @@ namespace ModuleA.ViewModels {
 
         [Required(ErrorMessage = "Publisher is required")]
         public ReactiveProperty<Publisher> Publisher { get; private set; }
-
+        public ReactiveProperty<bool> IsChecked { get; private set; }
         public ReactiveProperty<bool> HasErrors { get; private set; }
 
         public BookViewModel(Book model) {
             this.Model = model;
-
             this.Title = this.Model
                     .ToReactivePropertyAsSynchronized(
                         x => x.Title,
@@ -53,7 +52,7 @@ namespace ModuleA.ViewModels {
                         x => x.Publisher,
                         ignoreValidationErrorValue: true)
                     .SetValidateAttribute(() => this.Publisher);
-
+            this.IsChecked = new ReactiveProperty<bool>(false);
             this.HasErrors = new[] {
                 this.Title.ObserveHasErrors,
                 this.Author.ObserveHasErrors,

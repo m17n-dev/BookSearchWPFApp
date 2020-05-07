@@ -23,21 +23,17 @@ namespace ModuleA.ViewModels {
 
         [Required(ErrorMessage = "Gender is required")]
         public ReactiveProperty<GenderType> Gender { get; private set; }
-
-        //[Required(ErrorMessage = "Books is required")]
         public ReactiveProperty<ICollection<Book>> Books { get; private set; }
-
+        public ReactiveProperty<bool> IsChecked { get; }
         public ReactiveProperty<bool> HasErrors { get; private set; }
 
         public AuthorViewModel(Author model) {
             this.Model = model;
-
             this.Name = this.Model
                     .ToReactivePropertyAsSynchronized(
                         x => x.Name,
                         ignoreValidationErrorValue: true)
                     .SetValidateAttribute(() => this.Name);
-
             this.Birthday = this.Model
                     .ToReactivePropertyAsSynchronized(
                         x => x.Birthday,
@@ -45,15 +41,13 @@ namespace ModuleA.ViewModels {
                         convertBack: x => DateTime.Parse(x),
                         ignoreValidationErrorValue: true)
                     .SetValidateAttribute(() => this.Birthday);
-
             this.Gender = this.Model
                     .ToReactivePropertyAsSynchronized(
                         x => x.Gender);
-
             this.Books = this.Model
                     .ToReactivePropertyAsSynchronized(
                         x => x.Books);
-
+            this.IsChecked = new ReactiveProperty<bool>(false);
             this.HasErrors = new[] {
                 this.Name.ObserveHasErrors,
                 this.Birthday.ObserveHasErrors,
