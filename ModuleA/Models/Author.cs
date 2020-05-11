@@ -1,4 +1,4 @@
-﻿using ModuleA.DataTypes;
+﻿using ModuleA.DataTypes.Enums;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ namespace ModuleA.Models {
         private string _name;
         private DateTime _birthday;
         private GenderType _gender;
+        private bool _isChecked;
         private ICollection<Book> _books;
 
         public int Id {
@@ -31,6 +32,11 @@ namespace ModuleA.Models {
         public GenderType Gender {
             get { return _gender; }
             set { SetProperty(ref _gender, value); }
+        }
+
+        public bool IsChecked {
+            get { return _isChecked; }
+            set { SetProperty(ref _isChecked, value); }
         }
 
         public virtual ICollection<Book> Books {

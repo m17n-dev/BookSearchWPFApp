@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModuleA.DataTypes.Enums;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -16,9 +17,9 @@ namespace ModuleA.Models {
             Debug.WriteLine("SeedAsync called().");
             await Task.Run(() => {
                 var authors = new List<Author> {
-                    new Author { Name = "Haruki Murakami", Birthday = DateTime.Parse("1949-01-21"), Gender = DataTypes.GenderType.Male },
-                    new Author { Name = "Francis Scott Key Fitzgerald", Birthday = DateTime.Parse("1896-09-24"), Gender = DataTypes.GenderType.Male },
-                    new Author { Name = "Joanne Rowling", Birthday = DateTime.Parse("1965-07-31"), Gender = DataTypes.GenderType.Female },
+                    new Author { Name = "Haruki Murakami", Birthday = DateTime.Parse("1949-01-21"), Gender = GenderType.Male },
+                    new Author { Name = "Francis Scott Key Fitzgerald", Birthday = DateTime.Parse("1896-09-24"), Gender = GenderType.Male },
+                    new Author { Name = "Joanne Rowling", Birthday = DateTime.Parse("1965-07-31"), Gender = GenderType.Female },
                 };
                 authors.ForEach(x => context.Authors.Add(x));
                 context.SaveChanges();

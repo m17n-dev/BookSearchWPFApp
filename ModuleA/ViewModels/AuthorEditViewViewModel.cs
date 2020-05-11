@@ -1,4 +1,4 @@
-﻿using ModuleA.DataTypes;
+﻿using ModuleA.DataTypes.Enums;
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Reactive.Bindings;
@@ -39,7 +39,7 @@ namespace ModuleA.ViewModels {
             this.CommitCommand.Subscribe(async _ => {
                 await this._model.AuthorDetail.UpdateAsync();
                 this.FinishInteraction();
-            });
+            }).AddTo(this._disposable);
 
             this.CancelCommand = new DelegateCommand(CancelInteraction);
 

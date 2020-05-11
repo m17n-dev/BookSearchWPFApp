@@ -20,8 +20,18 @@ namespace ModuleA.Models {
         public async Task UpdateAsync() {
             await Task.Run(() => {
                 this._repository.UpdateAuthor(this.EditTarget);
-                this._interaction.OnNext(new AuthorChanged(this.EditTarget));
             });
+            this._interaction.OnNext(new AuthorChanged(this.EditTarget));
+        }
+
+        public async Task UpdateIsCheckedAsync(bool isChecked, int id) {
+            await Task.Run(() => {
+                this.EditTarget = this._repository.FindAuthor(id);
+            });
+            await Task.Run(() => {
+                this._repository.UpdateIsCheckedAuthor(this.EditTarget, isChecked);
+            });
+            this._interaction.OnNext(new AuthorChanged(this.EditTarget));
         }
 
         public async Task SetEditTargetAsync(int id) {

@@ -1,5 +1,6 @@
-﻿using ModuleA.DataTypes;
+﻿using ModuleA.DataTypes.Enums;
 using ModuleA.Extensions;
+using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using Reactive.Bindings;
@@ -19,12 +20,15 @@ namespace ModuleA.ViewModels {
         public ReactiveProperty<AuthorViewModel> InputAuthor { get; private set; }
         public ReactiveProperty<AuthorViewModel> SelectedAuthor { get; private set; }
         public ReactiveProperty<int> CountedAuthor { get; private set; }
+        public ReactiveProperty<bool?> IsCheckedHeader { get; private set; }
         public InteractionRequest<Confirmation> ConfirmRequest { get; private set; }
         public InteractionRequest<INotification> EditRequest { get; private set; }
         public AsyncReactiveCommand LoadCommand { get; private set; }
         public AsyncReactiveCommand AddCommand { get; private set; }
         public ReactiveCommand DeleteCommand { get; private set; }
         public AsyncReactiveCommand EditCommand { get; private set; }
+        public DelegateCommand<bool?> HeaderCheckCommand { get; private set; }
+        public DelegateCommand<object> CheckCommand { get; private set; }
         public GenderType[] Genders { get; private set; }
 
         public AuthorViewViewModel() {
@@ -44,6 +48,12 @@ namespace ModuleA.ViewModels {
                 .ToReactiveProperty()
                 .AddTo(this._disposable);
 
+            this.IsCheckedHeader = this._model
+                .AuthorsMaster
+                .ObserveProperty(x => x.IsCheckedHeader)
+                .ToReactiveProperty()
+                .AddTo(this._disposable);
+
             //DatePicker Default Value
             this.InputAuthor.Value.Birthday.Value = DateTime.Now.ToString("yyyy/MM/dd");
 
@@ -57,14 +67,23 @@ namespace ModuleA.ViewModels {
 
             this.LoadCommand = new AsyncReactiveCommand();
             this.LoadCommand
-                .Subscribe(async _ => await this._model.AuthorsMaster.LoadAsync());
+                .Subscribe(async _ => {
+                    await this._model.AuthorsMaster.LoadAsync();
+                    await this._model.AuthorsMaster.CountAsync();
+                    this.IsCheckedHeader.Value = await this._model.AuthorsMaster.ThreeStateAsync();
+                }).AddTo(this._disposable);
 
             this.AddCommand = this.InputAuthor
                 .SelectMany(x => x.HasErrors)
                 .Select(x => !x)
                 .ToAsyncReactiveCommand();
             this.AddCommand
-                .Subscribe(async _ => await this._model.AuthorsMaster.AddAuthorAsync());
+                .Subscribe(async _ => {
+                    await this._model.AuthorsMaster.AddAuthorAsync();
+                    await this._model.AuthorsMaster.LoadAsync();
+                    await this._model.AuthorsMaster.CountAsync();
+                    this.IsCheckedHeader.Value = await this._model.AuthorsMaster.ThreeStateAsync();
+                }).AddTo(this._disposable);
 
             this.DeleteCommand = this.SelectedAuthor
                 .Select(x => x != null)
@@ -78,8 +97,9 @@ namespace ModuleA.ViewModels {
                 .Select(_ => this.SelectedAuthor.Value.Model.Id)
                 .Subscribe(async x => {
                     await this._model.AuthorsMaster.DeleteAsync(x);
-                    Debug.WriteLine("Delete ... Id: {0}", x);
-                });
+                    await this._model.AuthorsMaster.CountAsync();
+                    this.IsCheckedHeader.Value = await this._model.AuthorsMaster.ThreeStateAsync();
+                }).AddTo(this._disposable);
 
             this.EditCommand = this.SelectedAuthor
                 .Select(x => x != null)
@@ -87,11 +107,37 @@ namespace ModuleA.ViewModels {
             this.EditCommand
                 .Subscribe(async _ => {
                     await this._model.AuthorDetail.SetEditTargetAsync(this.SelectedAuthor.Value.Model.Id);
-                    Debug.WriteLine("Edit ... Id: {0}", this.SelectedAuthor.Value.Model.Id);
                     this.EditRequest.Raise(new Notification { Title = "Edit" });
-                });
+                }).AddTo(this._disposable);
+
+            this.HeaderCheckCommand = new DelegateCommand<bool?>(HeaderCheckAsync);
+
+            this.CheckCommand = new DelegateCommand<object>(CheckAsync);
 
             this.Genders = this._model.AuthorsMaster.Genders;
+        }
+
+        private async void HeaderCheckAsync(bool? checkPath) {
+            Debug.WriteLine("HeaderCheckAsync() called. {0}", checkPath);
+            if (checkPath == true) {
+                await this._model.AuthorsMaster.AllCheckedAsync();
+                await this._model.AuthorsMaster.LoadAsync();
+            }
+            else if (checkPath == false) {
+                await this._model.AuthorsMaster.AllUnCheckedAsync();
+                await this._model.AuthorsMaster.LoadAsync();
+            }
+        }
+
+        private async void CheckAsync(object parameter) {
+            Debug.WriteLine("CheckAsync() called. {0}", parameter);
+            var values = (object[])parameter;
+            var isChecked = (bool)values[0];
+            var id = (int)values[1];
+            Debug.WriteLine("isChecked:{0} id:{1}", isChecked, id);
+            await this._model.AuthorDetail.UpdateIsCheckedAsync(isChecked, id);
+            this.IsCheckedHeader.Value = await this._model.AuthorsMaster.ThreeStateAsync();
+            await this._model.AuthorsMaster.LoadAsync();
         }
     }
 }

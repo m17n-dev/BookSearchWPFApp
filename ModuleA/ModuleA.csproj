@@ -170,7 +170,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataTypes\GenderType.cs" />
+    <Compile Include="Converters\MultipleCommandParametersConverter.cs" />
+    <Compile Include="DataTypes\Enums\GenderType.cs" />
     <Compile Include="Extensions\ForEachExtension.cs" />
     <Compile Include="Extensions\IndexOfExtension.cs" />
     <Compile Include="Extensions\InteractionRequestExtension.cs" />

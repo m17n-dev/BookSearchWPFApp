@@ -1,8 +1,9 @@
-﻿using ModuleA.DataTypes;
+﻿using ModuleA.DataTypes.Enums;
 using ModuleA.Extensions;
 using Prism.Mvvm;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -25,6 +26,12 @@ namespace ModuleA.Models {
             set { SetProperty(ref _countAuthor, value); }
         }
 
+        private bool? _isCheckedHeader;
+        public bool? IsCheckedHeader {
+            get { return _isCheckedHeader; }
+            set { SetProperty(ref _isCheckedHeader, value); }
+        }
+
         public ObservableCollection<Author> Authors { get; private set; }
         public GenderType[] Genders { get; private set; }
 
@@ -35,27 +42,46 @@ namespace ModuleA.Models {
                     author.Name = x.Author.Name;
                     author.Birthday = x.Author.Birthday;
                     author.Gender = x.Author.Gender;
+                    author.IsChecked = x.Author.IsChecked;
                     author.Books = x.Author.Books;
                 });
             this.Authors = new ObservableCollection<Author>();
             this.Genders = (GenderType[])Enum.GetValues(typeof(GenderType));
+            this.IsCheckedHeader = false;
         }
 
         public async Task LoadAsync() {
+            this.Authors.Clear();
             await Task.Run(() => {
-                this.Authors.Clear();
-                var results = this._repository.GetAuthors();
-                results.ForEach(this.Authors.Add);
+                this._repository.GetAuthors().ForEach(this.Authors.Add);
+            });
+        }
+
+        public async Task CountAsync() {
+            await Task.Run(() => {
                 this.CountAuthor = this.Authors.Count;
             });
         }
 
-        public async Task DeleteAsync(int id) {
+        public async Task AddAuthorAsync() {
             await Task.Run(() => {
-                if (!this._repository.IsExistAuthorInBooks(id)) {
-                    this._repository.DeleteAuthor(id);
-                    this.Authors.Remove(this.Authors.Single(x => x.Id == id));
-                    this.CountAuthor = this.Authors.Count;
+                this._repository.InsertAuthor(this.InputAuthor);
+            });
+                this.InputAuthor = new Author();
+                //DatePicker Default Value
+                this.InputAuthor.Birthday = DateTime.Now;
+                //ComboBox Default Value
+                this.InputAuthor.Gender = GenderType.Male;
+        }
+
+        public async Task DeleteAsync(int id) {
+                if (!this._repository.HasAuthorInBooks(id)) {
+                    await Task.Run(() => {
+                        this._repository.DeleteAuthor(id);
+                    });
+                    await Task.Run(() => {
+                        this.Authors.Remove(this.Authors.Single(x => x.Id == id));
+                    });
                 }
                 else {
                     var name = this.Authors.Single(x => x.Id == id).Name;
@@ -64,24 +90,28 @@ namespace ModuleA.Models {
                         "Result",
                         MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
+        }
+
+        public async Task AllCheckedAsync() {
+            Debug.WriteLine("AllCheckedAsync() called.");
+            await Task.Run(() => {
+                this._repository.AllChecked();
             });
         }
 
-        public async Task AddAuthorAsync() {
+        public async Task AllUnCheckedAsync() {
+            Debug.WriteLine("AllUnCheckedAsync() called.");
             await Task.Run(() => {
-                this._repository.InsertAuthor(this.InputAuthor);
-                //this.Authors.Add(InputAuthor); // Add at the end
-                //this.Authors.Insert(0, InputAuthor); //Add to specified position. If it is 0, it is added to the first position.
-                this.Authors.Clear();
-                var results = this._repository.GetAuthors();
-                results.ForEach(this.Authors.Add);
-                this.CountAuthor = this.Authors.Count;
-                this.InputAuthor = new Author();
-                //DatePicker Default Value
-                this.InputAuthor.Birthday = DateTime.Now;
-                //ComboBox Default Value
-                this.InputAuthor.Gender = GenderType.Male;
+                this._repository.AllUnChecked();
             });
+        }
+
+        public async Task<bool?> ThreeStateAsync() {
+            Debug.WriteLine("ThreeStateAsync() called.");
+            var tcs = new TaskCompletionSource<bool?>();
+            var threeState = this._repository.GetThreeState();
+            tcs.TrySetResult(threeState);
+            return await tcs.Task;
         }
     }
 }

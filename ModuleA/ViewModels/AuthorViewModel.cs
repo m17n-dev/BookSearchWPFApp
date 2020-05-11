@@ -1,4 +1,4 @@
-﻿using ModuleA.DataTypes;
+﻿using ModuleA.DataTypes.Enums;
 using ModuleA.Models;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -12,6 +12,7 @@ using System.Reactive.Linq;
 namespace ModuleA.ViewModels {
     public class AuthorViewModel {
         public Author Model { get; private set; }
+        public ReactiveProperty<int> Id { get; private set; }
 
         [DisplayName("Name")]
         [Required(ErrorMessage = "{0} is required")]
@@ -23,12 +24,15 @@ namespace ModuleA.ViewModels {
 
         [Required(ErrorMessage = "Gender is required")]
         public ReactiveProperty<GenderType> Gender { get; private set; }
+        public ReactiveProperty<bool> IsChecked { get; private set; }
         public ReactiveProperty<ICollection<Book>> Books { get; private set; }
-        public ReactiveProperty<bool> IsChecked { get; }
         public ReactiveProperty<bool> HasErrors { get; private set; }
 
         public AuthorViewModel(Author model) {
             this.Model = model;
+            this.Id = this.Model
+                    .ToReactivePropertyAsSynchronized(
+                        x => x.Id);
             this.Name = this.Model
                     .ToReactivePropertyAsSynchronized(
                         x => x.Name,
@@ -47,11 +51,14 @@ namespace ModuleA.ViewModels {
             this.Books = this.Model
                     .ToReactivePropertyAsSynchronized(
                         x => x.Books);
-            this.IsChecked = new ReactiveProperty<bool>(false);
+            this.IsChecked = this.Model
+                    .ToReactivePropertyAsSynchronized(
+                        x => x.IsChecked);
             this.HasErrors = new[] {
                 this.Name.ObserveHasErrors,
                 this.Birthday.ObserveHasErrors,
                 this.Gender.ObserveHasErrors,
+                this.IsChecked.ObserveHasErrors,
             }
            .CombineLatest(x => x.Any(y => y))
            .ToReactiveProperty();
