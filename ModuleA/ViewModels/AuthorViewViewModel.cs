@@ -26,7 +26,6 @@ namespace ModuleA.ViewModels {
         public InteractionRequest<INotification> EditRequest { get; private set; }
         public AsyncReactiveCommand LoadCommand { get; private set; }
         public AsyncReactiveCommand AddCommand { get; private set; }
-        public ReactiveCommand DeleteCommand { get; private set; }
         public ReactiveCommand DeleteMultipleCommand { get; private set; }
         public AsyncReactiveCommand EditCommand { get; private set; }
         public DelegateCommand<bool?> HeaderCheckCommand { get; private set; }
@@ -83,22 +82,6 @@ namespace ModuleA.ViewModels {
                 .Subscribe(async _ => {
                     await this._model.AuthorsMaster.AddAuthorAsync();
                     await this._model.AuthorsMaster.LoadAsync();
-                    await this._model.AuthorsMaster.CountAsync();
-                    this.IsCheckedHeader.Value = await this._model.AuthorsMaster.ThreeStateAsync();
-                }).AddTo(this._disposable);
-
-            this.DeleteCommand = this.SelectedAuthor
-                .Select(x => x != null)
-                .ToReactiveCommand();
-            this.DeleteCommand
-                .SelectMany(_ => this.ConfirmRequest.RaiseAsObservable(new Confirmation {
-                    Title = "Confirmation",
-                    Content = "Do you want to delete?"
-                }))
-                .Where(x => x.Confirmed)
-                .Select(_ => this.SelectedAuthor.Value.Model.Id)
-                .Subscribe(async x => {
-                    await this._model.AuthorsMaster.DeleteAsync(x);
                     await this._model.AuthorsMaster.CountAsync();
                     this.IsCheckedHeader.Value = await this._model.AuthorsMaster.ThreeStateAsync();
                 }).AddTo(this._disposable);
