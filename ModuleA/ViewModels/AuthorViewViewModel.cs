@@ -8,6 +8,7 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using AppContext = ModuleA.Models.AppContext;
@@ -26,6 +27,7 @@ namespace ModuleA.ViewModels {
         public AsyncReactiveCommand LoadCommand { get; private set; }
         public AsyncReactiveCommand AddCommand { get; private set; }
         public ReactiveCommand DeleteCommand { get; private set; }
+        public ReactiveCommand DeleteMultipleCommand { get; private set; }
         public AsyncReactiveCommand EditCommand { get; private set; }
         public DelegateCommand<bool?> HeaderCheckCommand { get; private set; }
         public DelegateCommand<object> CheckCommand { get; private set; }
@@ -97,6 +99,22 @@ namespace ModuleA.ViewModels {
                 .Select(_ => this.SelectedAuthor.Value.Model.Id)
                 .Subscribe(async x => {
                     await this._model.AuthorsMaster.DeleteAsync(x);
+                    await this._model.AuthorsMaster.CountAsync();
+                    this.IsCheckedHeader.Value = await this._model.AuthorsMaster.ThreeStateAsync();
+                }).AddTo(this._disposable);
+
+            this.DeleteMultipleCommand = this.Authors
+                .ObserveElementObservableProperty(x => x.IsChecked)
+                .Select(_ => this.Authors.Any(x => x.IsChecked.Value))
+                .ToReactiveCommand();
+            this.DeleteMultipleCommand
+                .SelectMany(_ => this.ConfirmRequest.RaiseAsObservable(new Confirmation {
+                    Title = "Confirmation",
+                    Content = "Do you want to delete?"
+                }))
+                .Where(x => x.Confirmed)
+                .Subscribe(async x => {
+                    await this._model.AuthorsMaster.DeleteAthoursAsync();
                     await this._model.AuthorsMaster.CountAsync();
                     this.IsCheckedHeader.Value = await this._model.AuthorsMaster.ThreeStateAsync();
                 }).AddTo(this._disposable);

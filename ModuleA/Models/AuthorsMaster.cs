@@ -92,6 +92,32 @@ namespace ModuleA.Models {
                 }
         }
 
+        public async Task DeleteAthoursAsync() {
+            Debug.WriteLine("DeleteAthoursAsync() called.");
+            var names = this._repository.GetAuthorNamesInBooks();
+            names.ForEach(x => Debug.WriteLine("--- {0}", x));
+            if (names.Count() == 0) {
+                await Task.Run(() => {
+                    this._repository.DeleteAuthors();
+                });
+                await Task.Run(() => {
+                    foreach (var x in this.Authors.ToList()) {
+                        if (x.IsChecked)
+                            this.Authors.Remove(x);
+                    }
+                });
+            }
+            else {
+                string author = string.Join(Environment.NewLine, names.ToArray());
+                string description = "You could not delete these author because  these were registered in the book list. "
+                    + "To delete, first delete all the author's books, then delete author.";
+                var message = author + Environment.NewLine + Environment.NewLine + description;
+                MessageBox.Show($"{ message }",
+                    "Result",
+                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
+
         public async Task AllCheckedAsync() {
             Debug.WriteLine("AllCheckedAsync() called.");
             await Task.Run(() => {

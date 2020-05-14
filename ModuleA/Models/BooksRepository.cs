@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Reactive.Bindings.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,17 +8,14 @@ namespace ModuleA.Models {
         public Book FindBook(int id) {
             using (var db = new BooksDbContext()) {
                 var book = db.Books.SingleOrDefault(x => x.Id == id);
-                if (book == null) {
+                if (book == null)
                     return null;
-                }
                 var author = db.Authors.SingleOrDefault(a => a.Id == book.Author.Id);
-                if (author == null) {
+                if (author == null)
                     return null;
-                }
                 var publisher = db.Publishers.SingleOrDefault(p => p.Id == book.Publisher.Id);
-                if (publisher == null) {
+                if (publisher == null)
                     return null;
-                }
 
                 return new Book {
                     Id = book.Id,
@@ -56,7 +54,6 @@ namespace ModuleA.Models {
                         Author = x.Author,
                         PublishedYear = x.PublishedYear,
                         Publisher = x.Publisher
-
                     }).ToList();
             }
         }

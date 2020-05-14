@@ -35,6 +35,23 @@ namespace ModuleA.Models {
             }
         }
 
+        public IEnumerable<string> GetAuthorNamesInBooks() {
+            using (var db = new BooksDbContext()) {
+                var ids = db.Authors
+                    .Where(x => x.IsChecked == true)
+                    .Select(x => x.Id).ToList();
+                return db.Books
+                    .OrderByDescending(x => x.Id).ToList()
+                    .Where(x => ids.Contains(x.Author.Id))
+                    .Join(db.Authors,
+                        book => book.Author.Id,
+                        author => author.Id,
+                        (book, author) => author.Name)
+                    .Distinct()
+                    .ToList();
+            }
+        }
+
         public void InsertAuthor(Author a) {
             using (var db = new BooksDbContext()) {
                 var author = new Author {
@@ -53,6 +70,16 @@ namespace ModuleA.Models {
                 var author = db.Authors.SingleOrDefault(x => x.Id == id);
                 if (author != null) {
                     db.Authors.Remove(author);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        public void DeleteAuthors() {
+            using (var db = new BooksDbContext()) {
+                var authors = db.Authors.Where(x => x.IsChecked == true);
+                if (authors != null) {
+                    db.Authors.RemoveRange(authors);
                     db.SaveChanges();
                 }
             }
