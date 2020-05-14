@@ -62,8 +62,12 @@
             </Style>
             <Style x:Key="DataGridCellStyle" TargetType="{x:Type DataGridCell}">
                 <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="true">
+                        <Setter Property="Background" Value="WhiteSmoke"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                    </Trigger>
                     <DataTrigger Binding="{Binding IsChecked.Value, UpdateSourceTrigger=PropertyChanged}" Value="True">
-                        <Setter Property="Background" Value="Pink"/>
+                        <Setter Property="Background" Value="LightCyan"/>
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
@@ -110,7 +114,6 @@
                   ItemsSource="{Binding Authors}"
                   IsReadOnly="True"
                   SelectionMode="Single"
-                  SelectedItem="{Binding SelectedAuthor.Value, Mode=TwoWay}"
                   ScrollViewer.CanContentScroll="True"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"

@@ -19,7 +19,6 @@ namespace ModuleA.ViewModels {
         private readonly AppContext _model = AppContext.Instance;
         public ReadOnlyReactiveCollection<AuthorViewModel> Authors { get; private set; }
         public ReactiveProperty<AuthorViewModel> InputAuthor { get; private set; }
-        public ReactiveProperty<AuthorViewModel> SelectedAuthor { get; private set; }
         public ReactiveProperty<int> CountedAuthor { get; private set; }
         public ReactiveProperty<bool?> IsCheckedHeader { get; private set; }
         public InteractionRequest<Confirmation> ConfirmRequest { get; private set; }
@@ -61,8 +60,6 @@ namespace ModuleA.ViewModels {
             //ComboBox Default Value
             this.InputAuthor.Value.Gender.Value = GenderType.Male;
 
-            this.SelectedAuthor = new ReactiveProperty<AuthorViewModel>();
-
             this.ConfirmRequest = new InteractionRequest<Confirmation>();
             this.EditRequest = new InteractionRequest<INotification>();
 
@@ -102,12 +99,14 @@ namespace ModuleA.ViewModels {
                     this.IsCheckedHeader.Value = await this._model.AuthorsMaster.ThreeStateAsync();
                 }).AddTo(this._disposable);
 
-            this.EditCommand = this.SelectedAuthor
-                .Select(x => x != null)
+            this.EditCommand = this.Authors
+                .ObserveElementObservableProperty(x => x.IsChecked)
+                .Select(_ => this.Authors.Count(x => x.IsChecked.Value) == 1)
                 .ToAsyncReactiveCommand();
             this.EditCommand
                 .Subscribe(async _ => {
-                    await this._model.AuthorDetail.SetEditTargetAsync(this.SelectedAuthor.Value.Model.Id);
+                    await this._model.AuthorDetail.SetEditTargetAsync(
+                        this.Authors.Single(x => x.IsChecked.Value == true).Id.Value);
                     this.EditRequest.Raise(new Notification { Title = "Edit" });
                 }).AddTo(this._disposable);
 
