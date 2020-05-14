@@ -26,7 +26,7 @@ namespace ModuleA.ViewModels {
         public InteractionRequest<INotification> EditRequest { get; private set; }
         public AsyncReactiveCommand LoadCommand { get; private set; }
         public AsyncReactiveCommand AddCommand { get; private set; }
-        public ReactiveCommand DeleteMultipleCommand { get; private set; }
+        public ReactiveCommand DeleteCommand { get; private set; }
         public AsyncReactiveCommand EditCommand { get; private set; }
         public DelegateCommand<bool?> HeaderCheckCommand { get; private set; }
         public DelegateCommand<object> CheckCommand { get; private set; }
@@ -86,11 +86,11 @@ namespace ModuleA.ViewModels {
                     this.IsCheckedHeader.Value = await this._model.AuthorsMaster.ThreeStateAsync();
                 }).AddTo(this._disposable);
 
-            this.DeleteMultipleCommand = this.Authors
+            this.DeleteCommand = this.Authors
                 .ObserveElementObservableProperty(x => x.IsChecked)
                 .Select(_ => this.Authors.Any(x => x.IsChecked.Value))
                 .ToReactiveCommand();
-            this.DeleteMultipleCommand
+            this.DeleteCommand
                 .SelectMany(_ => this.ConfirmRequest.RaiseAsObservable(new Confirmation {
                     Title = "Confirmation",
                     Content = "Do you want to delete?"

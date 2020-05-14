@@ -86,7 +86,7 @@
         <Grid Grid.Row="1">
             <Menu>
                 <MenuItem Header="Edit" Command="{Binding EditCommand, Mode=OneWay}"/>
-                <MenuItem Header="Delete" Command="{Binding DeleteMultipleCommand, Mode=OneWay}"/>
+                <MenuItem Header="Delete" Command="{Binding DeleteCommand, Mode=OneWay}"/>
             </Menu>
         </Grid>
 
