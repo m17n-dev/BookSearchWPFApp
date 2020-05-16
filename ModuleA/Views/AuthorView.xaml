@@ -30,6 +30,14 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:MultipleCommandParametersConverter x:Key="MultipleCommandParametersConverter"/>
+            <Style x:Key="ColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}">
+                <Setter Property="Padding" Value="10,10"/>
+                <Setter Property="Background" Value="LightGray"/>
+                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="BorderBrush" Value="Gray"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            </Style>
             <Style x:Key="CheckBoxHeaderStyle" TargetType="{x:Type DataGridColumnHeader}">
                 <Setter Property="Margin" Value="0,10"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -80,7 +88,6 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
-            
         </ResourceDictionary>
     </UserControl.Resources>
     
@@ -128,6 +135,7 @@
                   ScrollViewer.CanContentScroll="True"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                  ColumnHeaderStyle="{StaticResource ColumnHeaderStyle}"
                   RowStyle="{StaticResource DataGridRowStyle}"
                   CellStyle="{StaticResource DataGridCellStyle}">
             <DataGrid.Columns>
