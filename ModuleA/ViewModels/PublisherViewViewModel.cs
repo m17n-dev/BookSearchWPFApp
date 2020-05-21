@@ -18,7 +18,6 @@ namespace ModuleA.ViewModels {
         private readonly AppContext _model = AppContext.Instance;
         public ReadOnlyReactiveCollection<PublisherViewModel> Publishers { get; private set; }
         public ReactiveProperty<PublisherViewModel> InputPublisher { get; private set; }
-        public ReactiveProperty<PublisherViewModel> SelectedPublisher { get; private set; }
         public ReactiveProperty<int> CountedPublisher { get; private set; }
         public ReactiveProperty<bool?> IsCheckedHeader { get; private set; }
         public InteractionRequest<Confirmation> ConfirmRequest { get; private set; }
