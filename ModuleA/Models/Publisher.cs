@@ -7,24 +7,33 @@ namespace ModuleA.Models {
         private int _id;
         private string _name;
         private string _address;
+        private bool _isChecked;
         private ICollection<Book> _books;
 
         public int Id {
             get { return _id; }
             set { SetProperty(ref _id, value); }
         }
+
         [Required]
         [MaxLength(100)]
         public string Name {
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
+
         [Required]
         [MaxLength(100)]
         public string Address {
             get { return _address; }
             set { SetProperty(ref _address, value); }
         }
+
+        public bool IsChecked {
+            get { return _isChecked; }
+            set { SetProperty(ref _isChecked, value); }
+        }
+
         public virtual ICollection<Book> Books {
             get { return _books; }
             set { SetProperty(ref _books, value); }

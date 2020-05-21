@@ -85,14 +85,16 @@ namespace ModuleA.Models {
                 }
                 else {
                     var name = this.Authors.Single(x => x.Id == id).Name;
-                    MessageBox.Show($"You could not delete  \"{ name } \" because  \"{ name } \" was registered in the book list. " +
-                        $"To delete, delete all books of  \"{ name } \" registered in the book list and then delete  \"{ name } \".",
+                    MessageBox.Show($"You could not delete  \"{ name } \" because  \"{ name } \"" +
+                        $" was registered in the book list. " +
+                        $"To delete, delete all books of  \"{ name } \" registered" +
+                        $" in the book list and then delete  \"{ name } \".",
                         "Result",
                         MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
         }
 
-        public async Task DeleteAthoursAsync() {
+        public async Task DeleteAuthorsAsync() {
             Debug.WriteLine("DeleteAthoursAsync() called.");
             var names = this._repository.GetAuthorNamesInBooks();
             names.ForEach(x => Debug.WriteLine("--- {0}", x));
@@ -109,8 +111,9 @@ namespace ModuleA.Models {
             }
             else {
                 string author = string.Join(Environment.NewLine, names.ToArray());
-                string description = "You could not delete these author because  these were registered in the book list. "
-                    + "To delete, first delete all the author's books, then delete author.";
+                string description = "You could not delete these author because " +
+                    "these were registered in the book list. " +
+                    "To delete, first delete all the author's books, then delete author.";
                 var message = author + Environment.NewLine + Environment.NewLine + description;
                 MessageBox.Show($"{ message }",
                     "Result",

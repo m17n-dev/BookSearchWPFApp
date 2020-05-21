@@ -39,8 +39,8 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Border x:Name="BackgroundBorder" BorderThickness="0,0,1,1"  BorderBrush="Black" Grid.ColumnSpan="2"/>
-                                <ContentPresenter  Margin="10,3" VerticalAlignment="Center" Grid.Column="0"/>
+                                <Border x:Name="BackgroundBorder" BorderThickness="0,0,1,1" BorderBrush="Black" Grid.ColumnSpan="2"/>
+                                <ContentPresenter Margin="10,3" VerticalAlignment="Center" Grid.Column="0"/>
                                 <Path x:Name="SortArrow"
                                       Visibility="Collapsed"
                                       Data="M0,0 L1,0 0.5,1 z"

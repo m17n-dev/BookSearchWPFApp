@@ -94,7 +94,7 @@ namespace ModuleA.ViewModels {
                 }))
                 .Where(x => x.Confirmed)
                 .Subscribe(async x => {
-                    await this._model.AuthorsMaster.DeleteAthoursAsync();
+                    await this._model.AuthorsMaster.DeleteAuthorsAsync();
                     await this._model.AuthorsMaster.CountAsync();
                     this.IsCheckedHeader.Value = await this._model.AuthorsMaster.ThreeStateAsync();
                 }).AddTo(this._disposable);

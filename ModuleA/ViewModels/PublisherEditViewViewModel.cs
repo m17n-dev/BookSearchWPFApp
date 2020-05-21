@@ -37,7 +37,7 @@ namespace ModuleA.ViewModels {
             this.CommitCommand.Subscribe(async _ => {
                 await this._model.PublisherDetail.UpdateAsync();
                 this.FinishInteraction();
-            });
+            }).AddTo(this._disposable);
 
             this.CancelCommand = new DelegateCommand(CancelInteraction);
         }

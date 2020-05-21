@@ -10,6 +10,7 @@ using System.Reactive.Linq;
 namespace ModuleA.ViewModels {
     public class PublisherViewModel {
         public Publisher Model { get; private set; }
+        public ReactiveProperty<int> Id { get; private set; }
 
         [DisplayName("Name")]
         [Required(ErrorMessage = "{0} is required")]
@@ -26,6 +27,9 @@ namespace ModuleA.ViewModels {
 
         public PublisherViewModel(Publisher model) {
             this.Model = model;
+            this.Id = this.Model
+                    .ToReactivePropertyAsSynchronized(
+                        x => x.Id);
             this.Name = this.Model
                     .ToReactivePropertyAsSynchronized(
                         x => x.Name,
@@ -39,10 +43,13 @@ namespace ModuleA.ViewModels {
             this.Books = this.Model
                     .ToReactivePropertyAsSynchronized(
                         x => x.Books);
-            this.IsChecked = new ReactiveProperty<bool>(false);
+            this.IsChecked = this.Model
+                    .ToReactivePropertyAsSynchronized(
+                        x => x.IsChecked);
             this.HasErrors = new[] {
                 this.Name.ObserveHasErrors,
-                this.Address.ObserveHasErrors
+                this.Address.ObserveHasErrors,
+                this.IsChecked.ObserveHasErrors,
             }
            .CombineLatest(x => x.Any(y => y))
            .ToReactiveProperty();

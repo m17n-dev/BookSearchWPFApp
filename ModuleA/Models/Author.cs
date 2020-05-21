@@ -17,6 +17,7 @@ namespace ModuleA.Models {
             get { return _id; }
             set { SetProperty(ref _id, value); }
         }
+
         [Required]
         [MaxLength(100)]
         public string Name {
