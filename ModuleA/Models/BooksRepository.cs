@@ -22,7 +22,8 @@ namespace ModuleA.Models {
                     Title = book.Title,
                     Author = author,
                     PublishedYear = book.PublishedYear,
-                    Publisher = publisher
+                    Publisher = publisher,
+                    IsChecked = book.IsChecked,
                 };
             }
         }
@@ -39,7 +40,8 @@ namespace ModuleA.Models {
                         Title = x.Title,
                         Author = x.Author,
                         PublishedYear = x.PublishedYear,
-                        Publisher = x.Publisher
+                        Publisher = x.Publisher,
+                        IsChecked = x.IsChecked
                     }).ToList();
             }
         }
@@ -53,13 +55,13 @@ namespace ModuleA.Models {
                         Title = x.Title,
                         Author = x.Author,
                         PublishedYear = x.PublishedYear,
-                        Publisher = x.Publisher
+                        Publisher = x.Publisher,
+                        IsChecked = x.IsChecked
                     }).ToList();
             }
         }
 
         public List<int> GetYears() {
-            //Enumerable.Range(1950, DateTime.Now.Year - 1950 + 1).ToList().ForEach(i => Debug.WriteLine(i));
             return Enumerable.Range(1950, DateTime.Now.Year - 1950 + 1).ToList();
         }
 
@@ -71,7 +73,8 @@ namespace ModuleA.Models {
                     Title = b.Title,
                     Author = author,
                     PublishedYear = b.PublishedYear,
-                    Publisher = publisher
+                    Publisher = publisher,
+                    IsChecked = b.IsChecked
                 };
                 db.Books.Add(book);
                 db.SaveChanges();
@@ -97,6 +100,7 @@ namespace ModuleA.Models {
                 book.Author = author;
                 book.PublishedYear = b.PublishedYear;
                 book.Publisher = publisher;
+                book.IsChecked = b.IsChecked;
                 db.SaveChanges();
             }
         }
