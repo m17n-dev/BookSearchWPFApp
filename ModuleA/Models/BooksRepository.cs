@@ -114,5 +114,13 @@ namespace ModuleA.Models {
                 db.SaveChanges();
             }
         }
+
+        public void UpdateIsCheckedBook(Book b, bool isChecked) {
+            using (var db = new BooksDbContext()) {
+                var book = db.Books.Single(x => x.Id == b.Id);
+                book.IsChecked = isChecked;
+                db.SaveChanges();
+            }
+        }
     }
 }
