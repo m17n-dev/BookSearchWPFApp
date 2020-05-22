@@ -91,6 +91,16 @@ namespace ModuleA.Models {
             }
         }
 
+        public void DeleteBooks() {
+            using (var db = new BooksDbContext()) {
+                var books = db.Books.Where(x => x.IsChecked == true);
+                if (books != null) {
+                    db.Books.RemoveRange(books);
+                    db.SaveChanges();
+                }
+            }
+        }
+
         public void UpdateBook(Book b) {
             using (var db = new BooksDbContext()) {
                 var book = db.Books.Single(x => x.Id == b.Id);
