@@ -136,5 +136,16 @@ namespace ModuleA.Models {
                 db.SaveChanges();
             }
         }
+
+        public bool? GetThreeState() {
+            using (var db = new BooksDbContext()) {
+                if (db.Books.All(x => x.IsChecked == true))
+                    return true;
+                else if (db.Books.All(x => x.IsChecked == false))
+                    return false;
+                else
+                    return null;
+            }
+        }
     }
 }
