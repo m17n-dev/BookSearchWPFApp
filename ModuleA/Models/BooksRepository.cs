@@ -122,5 +122,12 @@ namespace ModuleA.Models {
                 db.SaveChanges();
             }
         }
+
+        public void AllChecked() {
+            using (var db = new BooksDbContext()) {
+                db.Books.ToList().ForEach(x => x.IsChecked = true);
+                db.SaveChanges();
+            }
+        }
     }
 }
