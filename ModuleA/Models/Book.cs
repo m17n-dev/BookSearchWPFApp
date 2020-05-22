@@ -8,30 +8,40 @@ namespace ModuleA.Models {
         private Author _author;
         private Publisher _publisher;
         private int _publishedYear;
+        private bool _isChecked;
 
         public int Id {
             get { return _id; }
             set { SetProperty(ref _id, value); }
         }
+
         [Required]
         [MaxLength(100)]
         public string Title {
             get { return _title; }
             set { SetProperty(ref _title, value); }
         }
+
         public virtual Author Author {
             get { return _author; }
             set { SetProperty(ref _author, value); }
         }
+
         [Required]
         [Range(1950, int.MaxValue)]
         public int PublishedYear {
             get { return _publishedYear; }
             set { SetProperty(ref _publishedYear, value); }
         }
+
         public virtual Publisher Publisher {
             get { return _publisher; }
             set { SetProperty(ref _publisher, value); }
+        }
+
+        public bool IsChecked {
+            get { return _isChecked; }
+            set { SetProperty(ref _isChecked, value); }
         }
     }
 }
