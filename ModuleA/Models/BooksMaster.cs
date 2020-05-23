@@ -23,6 +23,12 @@ namespace ModuleA.Models {
             set { SetProperty(ref _countBook, value); }
         }
 
+        private bool? _isCheckedHeader;
+        public bool? IsCheckedHeader {
+            get { return _isCheckedHeader; }
+            set { SetProperty(ref _isCheckedHeader, value); }
+        }
+
         public ObservableCollection<Book> Books { get; private set; }
         public ObservableCollection<int> Years { get; private set; }
         public int YearsIndex { get; private set; }
@@ -38,6 +44,7 @@ namespace ModuleA.Models {
                 });
             this.Books = new ObservableCollection<Book>();
             this.Years = new ObservableCollection<int>();
+            this.IsCheckedHeader = false;
         }
 
         public async Task LoadAsync() {
