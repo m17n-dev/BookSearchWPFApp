@@ -48,16 +48,15 @@ namespace ModuleA.Models {
         }
 
         public async Task LoadAsync() {
+            this.Books.Clear();
             await Task.Run(() => {
-                this.Books.Clear();
-                var results = this._repository.GetBooks();
-                if (results != null) {
-                    foreach (var book in results) {
-                        this.Books.Add(book);
-                        //Debug.WriteLine(book.Title);
-                    }
-                    this.CountBook = this.Books.Count;
-                }
+                this._repository.GetBooks().ForEach(this.Books.Add);
+            });
+        }
+
+        public async Task CountAsync() {
+            await Task.Run(() => {
+                this.CountBook = this.Books.Count;
             });
         }
 
