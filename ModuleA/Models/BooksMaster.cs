@@ -106,5 +106,12 @@ namespace ModuleA.Models {
                 this._repository.AllUnChecked();
             });
         }
+
+        public async Task<bool?> ThreeStateAsync() {
+            var tcs = new TaskCompletionSource<bool?>();
+            var threeState = this._repository.GetThreeState();
+            tcs.TrySetResult(threeState);
+            return await tcs.Task;
+        }
     }
 }
