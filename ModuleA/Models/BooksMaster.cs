@@ -94,5 +94,11 @@ namespace ModuleA.Models {
                 }
             });
         }
+
+        public async Task AllCheckedAsync() {
+            await Task.Run(() => {
+                this._repository.AllChecked();
+            });
+        }
     }
 }
