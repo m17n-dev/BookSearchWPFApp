@@ -76,6 +76,18 @@ namespace ModuleA.Models {
             });
         }
 
+        public async Task DeleteBooksAsync() {
+            await Task.Run(() => {
+                this._repository.DeleteBooks();
+            });
+            await Task.Run(() => {
+                foreach (var x in this.Books.ToList()) {
+                    if (x.IsChecked)
+                        this.Books.Remove(x);
+                }
+            });
+        }
+
         public async Task AddBookAsync() {
             await Task.Run(() => {
                 this._repository.InsertBook(this.InputBook);
