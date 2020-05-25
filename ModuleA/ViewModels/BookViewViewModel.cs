@@ -120,5 +120,16 @@ namespace ModuleA.ViewModels {
                     this.EditRequest.Raise(new Notification { Title = "Edit" });
                 }).AddTo(this._disposable);
         }
+
+        private async void HeaderCheckAsync(bool? checkPath) {
+            if (checkPath == true) {
+                await this._model.BooksMaster.AllCheckedAsync();
+                await this._model.BooksMaster.LoadAsync();
+            }
+            else if (checkPath == false) {
+                await this._model.BooksMaster.AllUnCheckedAsync();
+                await this._model.BooksMaster.LoadAsync();
+            }
+        }
     }
 }
