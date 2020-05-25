@@ -52,12 +52,15 @@ namespace ModuleA.ViewModels {
                         x => x.Publisher,
                         ignoreValidationErrorValue: true)
                     .SetValidateAttribute(() => this.Publisher);
-            this.IsChecked = new ReactiveProperty<bool>(false);
+            this.IsChecked = this.Model
+                    .ToReactivePropertyAsSynchronized(
+                        x => x.IsChecked);
             this.HasErrors = new[] {
                 this.Title.ObserveHasErrors,
                 this.Author.ObserveHasErrors,
                 this.PublishedYear.ObserveHasErrors,
                 this.Publisher.ObserveHasErrors,
+                this.IsChecked.ObserveHasErrors,
             }
            .CombineLatest(x => x.Any(y => y))
            .ToReactiveProperty();
