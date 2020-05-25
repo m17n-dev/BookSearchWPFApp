@@ -9,6 +9,7 @@ using System.Reactive.Linq;
 namespace ModuleA.ViewModels {
     public class BookViewModel {
         public Book Model { get; private set; }
+        public ReactiveProperty<int> Id { get; private set; }
 
         [DisplayName("Title")]
         [Required(ErrorMessage = "{0} is required")]
@@ -30,6 +31,9 @@ namespace ModuleA.ViewModels {
 
         public BookViewModel(Book model) {
             this.Model = model;
+            this.Id = this.Model
+                    .ToReactivePropertyAsSynchronized(
+                        x => x.Id);
             this.Title = this.Model
                     .ToReactivePropertyAsSynchronized(
                         x => x.Title,
