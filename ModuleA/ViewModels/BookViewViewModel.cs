@@ -5,6 +5,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using AppContext = ModuleA.Models.AppContext;
@@ -92,8 +93,9 @@ namespace ModuleA.ViewModels {
                     this.IsCheckedHeader.Value = await this._model.BooksMaster.ThreeStateAsync();
                 }).AddTo(this._disposable);
 
-            this.DeleteCommand = this.SelectedBook
-                .Select(x => x != null)
+            this.DeleteCommand = this.Books
+                .ObserveElementObservableProperty(x => x.IsChecked)
+                .Select(_ => this.Books.Any(x => x.IsChecked.Value))
                 .ToReactiveCommand();
             this.DeleteCommand
                 .SelectMany(_ => this.ConfirmRequest.RaiseAsObservable(new Confirmation {
@@ -101,8 +103,11 @@ namespace ModuleA.ViewModels {
                     Content = "Do you want to delete?"
                 }))
                 .Where(x => x.Confirmed)
-                .Select(_ => this.SelectedBook.Value.Model.Id)
-                .Subscribe(async x => await this._model.BooksMaster.DeleteAsync(x));
+                .Subscribe(async x => {
+                    await this._model.BooksMaster.DeleteBooksAsync();
+                    await this._model.BooksMaster.CountAsync();
+                    this.IsCheckedHeader.Value = await this._model.BooksMaster.ThreeStateAsync();
+                }).AddTo(this._disposable);
 
             this.EditCommand = this.SelectedBook
                 .Select(x => x != null)
