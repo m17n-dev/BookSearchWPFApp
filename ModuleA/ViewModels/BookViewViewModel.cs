@@ -109,14 +109,16 @@ namespace ModuleA.ViewModels {
                     this.IsCheckedHeader.Value = await this._model.BooksMaster.ThreeStateAsync();
                 }).AddTo(this._disposable);
 
-            this.EditCommand = this.SelectedBook
-                .Select(x => x != null)
+            this.EditCommand = this.Books
+                .ObserveElementObservableProperty(x => x.IsChecked)
+                .Select(_ => this.Books.Count(x => x.IsChecked.Value) == 1)
                 .ToAsyncReactiveCommand();
             this.EditCommand
                 .Subscribe(async _ => {
-                    await this._model.BookDetail.SetEditTargetAsync(this.SelectedBook.Value.Model.Id);
+                    await this._model.BookDetail.SetEditTargetAsync(
+                        this.Books.Single(x => x.IsChecked.Value == true).Id.Value);
                     this.EditRequest.Raise(new Notification { Title = "Edit" });
-                });
+                }).AddTo(this._disposable);
         }
     }
 }
