@@ -67,6 +67,13 @@ namespace ModuleA.Models {
             });
         }
 
+        public async Task AddBookAsync() {
+            await Task.Run(() => {
+                this._repository.InsertBook(this.InputBook);
+            });
+            this.InputBook = new Book();
+        }
+
         public async Task DeleteAsync(int id) {
             await Task.Run(() => {
                 this._repository.DeleteBook(id);
@@ -85,20 +92,6 @@ namespace ModuleA.Models {
                     if (x.IsChecked)
                         this.Books.Remove(x);
                 }
-            });
-        }
-
-        public async Task AddBookAsync() {
-            await Task.Run(() => {
-                this._repository.InsertBook(this.InputBook);
-                this.Books.Clear();
-                var results = this._repository.GetBooks();
-                results.ForEach(this.Books.Add);
-                this.CountBook = this.Books.Count;
-                this.InputBook = new Book();
-                this.Years.Clear();
-                var resultsYear = this._repository.GetYears();
-                resultsYear.ForEach(this.Years.Add);
             });
         }
     }
