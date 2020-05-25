@@ -26,8 +26,8 @@ namespace ModuleA.Models {
         public async Task UpdateAsync() {
             await Task.Run(() => {
                 this._repository.UpdateBook(this.EditTarget);
-                this._interaction.OnNext(new BookChanged(this.EditTarget));
             });
+            this._interaction.OnNext(new BookChanged(this.EditTarget));
         }
 
         public async Task SetEditTargetAsync(int id) {
