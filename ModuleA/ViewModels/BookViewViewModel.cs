@@ -62,7 +62,12 @@ namespace ModuleA.ViewModels {
             this.EditRequest = new InteractionRequest<INotification>();
 
             this.LoadCommand = new AsyncReactiveCommand();
-            this.LoadCommand.Subscribe(_ => this._model.BooksMaster.LoadAsync());
+            this.LoadCommand
+                .Subscribe(async _ => {
+                    await this._model.BooksMaster.LoadAsync();
+                    await this._model.BooksMaster.CountAsync();
+                    this.IsCheckedHeader.Value = await this._model.BooksMaster.ThreeStateAsync();
+                }).AddTo(this._disposable);
 
             this.LoadYearsCommand = new AsyncReactiveCommand();
             this.LoadYearsCommand.Subscribe(_ => this._model.BooksMaster.LoadYearsAsync());
