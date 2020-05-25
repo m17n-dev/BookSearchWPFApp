@@ -85,7 +85,12 @@ namespace ModuleA.ViewModels {
                 .Select(x => !x)
                 .ToAsyncReactiveCommand();
             this.AddCommand
-                .Subscribe(async _ => await this._model.BooksMaster.AddBookAsync());
+                .Subscribe(async _ => {
+                    await this._model.BooksMaster.AddBookAsync();
+                    await this._model.BooksMaster.LoadAsync();
+                    await this._model.BooksMaster.CountAsync();
+                    this.IsCheckedHeader.Value = await this._model.BooksMaster.ThreeStateAsync();
+                }).AddTo(this._disposable);
 
             this.DeleteCommand = this.SelectedBook
                 .Select(x => x != null)
