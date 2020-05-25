@@ -31,6 +31,7 @@ namespace ModuleA.ViewModels {
         public ReactiveCommand DeleteCommand { get; private set; }
         public AsyncReactiveCommand EditCommand { get; private set; }
         public DelegateCommand<bool?> HeaderCheckCommand { get; private set; }
+        public DelegateCommand<object> CheckCommand { get; private set; }
 
         public BookViewViewModel() {
             this.Books = this._model
@@ -123,6 +124,8 @@ namespace ModuleA.ViewModels {
                 }).AddTo(this._disposable);
 
             this.HeaderCheckCommand = new DelegateCommand<bool?>(HeaderCheckAsync);
+
+            this.CheckCommand = new DelegateCommand<object>(CheckAsync);
         }
 
         private async void HeaderCheckAsync(bool? checkPath) {
