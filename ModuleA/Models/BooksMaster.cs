@@ -62,10 +62,9 @@ namespace ModuleA.Models {
         }
 
         public async Task LoadYearsAsync() {
+            this.Years.Clear();
             await Task.Run(() => {
-                this.Years.Clear();
-                var resultsYear = this._repository.GetYears();
-                resultsYear.ForEach(this.Years.Add);
+                this._repository.GetYears().ForEach(this.Years.Add);
             });
         }
 
