@@ -18,6 +18,7 @@ namespace ModuleA.ViewModels {
         public ReactiveProperty<BookViewModel> InputBook { get; private set; }
         public ReactiveProperty<BookViewModel> SelectedBook { get; private set; }
         public ReactiveProperty<int> CountedBook { get; private set; }
+        public ReactiveProperty<bool?> IsCheckedHeader { get; private set; }
         public InteractionRequest<Confirmation> ConfirmRequest { get; private set; }
         public InteractionRequest<INotification> EditRequest { get; private set; }
         public AsyncReactiveCommand LoadCommand { get; private set; }
@@ -46,6 +47,12 @@ namespace ModuleA.ViewModels {
             this.CountedBook = this._model
                 .BooksMaster
                 .ObserveProperty(x => x.CountBook)
+                .ToReactiveProperty()
+                .AddTo(this._disposable);
+
+            this.IsCheckedHeader = this._model
+                .BooksMaster
+                .ObserveProperty(x => x.IsCheckedHeader)
                 .ToReactiveProperty()
                 .AddTo(this._disposable);
 
