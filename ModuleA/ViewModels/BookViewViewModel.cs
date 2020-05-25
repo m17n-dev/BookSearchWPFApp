@@ -131,5 +131,14 @@ namespace ModuleA.ViewModels {
                 await this._model.BooksMaster.LoadAsync();
             }
         }
+
+        private async void CheckAsync(object parameter) {
+            var values = (object[])parameter;
+            var isChecked = (bool)values[0];
+            var id = (int)values[1];
+            await this._model.BookDetail.UpdateIsCheckedAsync(isChecked, id);
+            this.IsCheckedHeader.Value = await this._model.BooksMaster.ThreeStateAsync();
+            await this._model.BooksMaster.LoadAsync();
+        }
     }
 }
