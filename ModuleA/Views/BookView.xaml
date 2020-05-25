@@ -66,6 +66,16 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            <Style x:Key="DataGridRowStyle" TargetType="{x:Type DataGridRow}">
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                        <Setter Property="Background" Value="White"/>
+                    </Trigger>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                        <Setter Property="Background" Value="WhiteSmoke"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
             <Style x:Key="DataGridCellStyle" TargetType="{x:Type DataGridCell}">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding IsChecked.Value, UpdateSourceTrigger=PropertyChanged}" Value="True">
@@ -139,10 +149,11 @@
                   ItemsSource="{Binding Books}"
                   IsReadOnly="True"
                   SelectionMode="Single"
-                  SelectedItem="{Binding SelectedBook.Value, Mode=TwoWay}"
+                  AlternationCount="2"
                   ScrollViewer.CanContentScroll="True"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                  RowStyle="{StaticResource DataGridRowStyle}"
                   CellStyle="{StaticResource DataGridCellStyle}">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn HeaderStyle="{StaticResource CheckBoxHeaderStyle}"
