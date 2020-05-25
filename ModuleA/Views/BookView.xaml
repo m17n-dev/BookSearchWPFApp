@@ -78,8 +78,13 @@
             </Style>
             <Style x:Key="DataGridCellStyle" TargetType="{x:Type DataGridCell}">
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsChecked.Value, UpdateSourceTrigger=PropertyChanged}" Value="True">
-                        <Setter Property="Background" Value="Pink"/>
+                    <Trigger Property="IsSelected" Value="true">
+                        <Setter Property="Background" Value="WhiteSmoke"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                    </Trigger>
+                    <DataTrigger Binding="{Binding IsChecked.Value,
+                            UpdateSourceTrigger=PropertyChanged}" Value="True">
+                        <Setter Property="Background" Value="LightCyan"/>
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
