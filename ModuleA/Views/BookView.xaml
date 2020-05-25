@@ -33,6 +33,23 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:MultipleCommandParametersConverter x:Key="MultipleCommandParametersConverter"/>
+            <Style x:Key="CheckBoxHeaderStyle" TargetType="{x:Type DataGridColumnHeader}">
+                <Setter Property="Margin" Value="0,10"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <CheckBox IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}},
+                                Path=DataContext.IsCheckedHeader.Value,
+                                UpdateSourceTrigger=PropertyChanged}"
+                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}},
+                                Path=DataContext.HeaderCheckCommand, Mode=OneWay}"
+                                CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
             <Style x:Key="CheckBoxItemStyle" TargetType="{x:Type CheckBox}">
                 <Setter Property="Margin" Value="0,1"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -118,7 +135,7 @@
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
                   CellStyle="{StaticResource DataGridCellStyle}">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Header="Check"
+                <DataGridCheckBoxColumn HeaderStyle="{StaticResource CheckBoxHeaderStyle}"
                                         ElementStyle="{StaticResource CheckBoxItemStyle}"
                                         IsReadOnly="False"
                                         ClipboardContentBinding="{x:Null}"/>
