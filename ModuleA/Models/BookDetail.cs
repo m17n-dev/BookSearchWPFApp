@@ -30,6 +30,16 @@ namespace ModuleA.Models {
             this._interaction.OnNext(new BookChanged(this.EditTarget));
         }
 
+        public async Task UpdateIsCheckedAsync(bool isChecked, int id) {
+            await Task.Run(() => {
+                this.EditTarget = this._repository.FindBook(id);
+            });
+            await Task.Run(() => {
+                this._repository.UpdateIsCheckedBook(this.EditTarget, isChecked);
+            });
+            this._interaction.OnNext(new BookChanged(this.EditTarget));
+        }
+
         public async Task SetEditTargetAsync(int id) {
             await Task.Run(() => {
                 this.EditTarget = this._repository.FindBook(id);
