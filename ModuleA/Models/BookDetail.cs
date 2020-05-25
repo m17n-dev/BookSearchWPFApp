@@ -33,9 +33,10 @@ namespace ModuleA.Models {
         public async Task SetEditTargetAsync(int id) {
             await Task.Run(() => {
                 this.EditTarget = this._repository.FindBook(id);
-                var results = this._repository.GetYears();
-                this.YearsIndex = results.IndexOf(this.EditTarget.PublishedYear);
-                //Debug.WriteLine("YearsIndex: {0}", this.YearsIndex);
+            });
+            await Task.Run(() => {
+                this.YearsIndex = this._repository.GetYears()
+                    .IndexOf(this.EditTarget.PublishedYear);
             });
         }
     }
