@@ -70,8 +70,9 @@ namespace ModuleA.Models {
         public async Task DeleteAsync(int id) {
             await Task.Run(() => {
                 this._repository.DeleteBook(id);
+            });
+            await Task.Run(() => {
                 this.Books.Remove(this.Books.Single(x => x.Id == id));
-                this.CountBook = this.Books.Count;
             });
         }
 
