@@ -4,6 +4,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:Views="clr-namespace:ModuleA.Views"
              xmlns:ViewModels="clr-namespace:ModuleA.ViewModels"
+             xmlns:converters="clr-namespace:ModuleA.Converters"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:Custom="http://www.codeplex.com/prism"
              prism:ViewModelLocator.AutoWireViewModel="True">
@@ -31,6 +32,7 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
+            <converters:MultipleCommandParametersConverter x:Key="MultipleCommandParametersConverter"/>
             <Style x:Key="CheckBoxItemStyle" TargetType="{x:Type CheckBox}">
                 <Setter Property="Margin" Value="0,1"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
