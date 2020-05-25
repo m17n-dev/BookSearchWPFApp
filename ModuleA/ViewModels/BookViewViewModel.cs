@@ -1,4 +1,5 @@
 ﻿using ModuleA.Extensions;
+using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using Reactive.Bindings;
@@ -29,6 +30,7 @@ namespace ModuleA.ViewModels {
         public AsyncReactiveCommand AddCommand { get; private set; }
         public ReactiveCommand DeleteCommand { get; private set; }
         public AsyncReactiveCommand EditCommand { get; private set; }
+        public DelegateCommand<bool?> HeaderCheckCommand { get; private set; }
 
         public BookViewViewModel() {
             this.Books = this._model
@@ -119,6 +121,8 @@ namespace ModuleA.ViewModels {
                         this.Books.Single(x => x.IsChecked.Value == true).Id.Value);
                     this.EditRequest.Raise(new Notification { Title = "Edit" });
                 }).AddTo(this._disposable);
+
+            this.HeaderCheckCommand = new DelegateCommand<bool?>(HeaderCheckAsync);
         }
 
         private async void HeaderCheckAsync(bool? checkPath) {
