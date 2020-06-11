@@ -91,9 +91,9 @@ namespace ModuleA.Models {
             }
         }
 
-        public void UpdateIsCheckedPublisher(Publisher a, bool isChecked) {
+        public void UpdateIsCheckedPublisher(Publisher p, bool isChecked) {
             using (var db = new BooksDbContext()) {
-                var publisher = db.Publishers.Single(x => x.Id == a.Id);
+                var publisher = db.Publishers.Single(x => x.Id == p.Id);
                 publisher.IsChecked = isChecked;
                 db.SaveChanges();
             }
