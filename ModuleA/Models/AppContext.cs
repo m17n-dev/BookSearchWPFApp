@@ -3,9 +3,9 @@ using System.Reactive.Subjects;
 
 namespace ModuleA.Models {
     public class AppContext : BindableBase {
-        public static readonly AppContext Instance = new AppContext();
-
         private readonly Subject<object> _interaction = new Subject<object>();
+
+        public static readonly AppContext Instance = new AppContext();
 
         public BooksMaster BooksMaster { get; private set; }
         public BookDetail BookDetail { get; private set; }
